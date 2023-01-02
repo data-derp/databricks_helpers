@@ -10,5 +10,6 @@ class DataDerpDatabricksHelpers:
         return f"/FileStore/{self.current_user()}/{self.exercise_name}"
 
     def clean_working_directory(self) -> bool:
+        print(f"Removing files in {self.working_directory}")
         self.dbutils.fs.rm(self.working_directory(), True)
         return True
