@@ -1,9 +1,14 @@
 
 
+Build:
+```bash
+pip install -r requirements.txt -e .
+python setup.py bdist_egg
+```
 
 Install:
 ```bash
-pip install git+https://github.com/data-derp/databricks_helpers
+pip install git+https://github.com/data-derp/databricks_helpers#egg=databricks_helpers
 ```
 
 ```text
