@@ -1,3 +1,12 @@
+import os
+import wget
+import sys
+import shutil
+import zipfile
+
+sys.stdout.fileno = lambda: False  # prevents AttributeError: 'ConsoleBuffer' object has no attribute 'fileno'
+
+
 class DataDerpDatabricksHelpers:
     def __init__(self, dbutils, exercise_name):
         self.dbutils = dbutils
@@ -9,7 +18,34 @@ class DataDerpDatabricksHelpers:
     def working_directory(self) -> str:
         return f"/FileStore/{self.current_user()}/{self.exercise_name}"
 
+    def tmp_working_directory(self) -> str:
+        return f"{os.getcwd()}/{self.current_user()}/tmp"
+
     def clean_working_directory(self) -> bool:
         print(f"Removing files in {self.working_directory()}")
         self.dbutils.fs.rm(self.working_directory(), True)
         return True
+
+    def clean_remake_dir(self):
+        if os.path.isdir(self.tmp_working_directory()): shutil.rmtree(self.tmp_working_directory())
+        os.makedirs(self.tmp_working_directory())
+
+    def download_to_local_dir(self, url):
+        filename_parser = lambda y: y.split("/")[-1].replace("?raw=true","")
+        self.clean_remake_dir()
+        filename = (filename_parser)(url)
+        tmp_path = f"{self.tmp_working_directory()}/{filename}"
+        target_path = f"{self.working_directory()}/{filename}"
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+
+        saved_filename = wget.download(url, out=tmp_path)
+        print(saved_filename)
+
+        if target_path.endswith(".zip"):
+            with zipfile.ZipFile(tmp_path, 'r') as zip_ref:
+                zip_ref.extractall(self.tmp_working_directory())
+
+        self.dbutils.fs.cp(f"file:{self.tmp_working_directory()}/", self.working_directory(), True)
+
+        return target_path
