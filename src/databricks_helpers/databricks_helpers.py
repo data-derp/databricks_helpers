@@ -6,9 +6,9 @@ class DataDerpDatabricksHelpers:
     def current_user(self) -> str:
         return self.dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get().split("@")[0]
 
-    def working_directory(self, current_user: str) -> str:
-        return f"/FileStore/{current_user}/{self.exercise_name}"
+    def working_directory(self) -> str:
+        return f"/FileStore/{self.current_user()}/{self.exercise_name}"
 
     def clean_working_directory(self) -> bool:
-        self.dbutils.fs.rm(self.working_directory(self.current_user()), True)
+        self.dbutils.fs.rm(self.working_directory(), True)
         return True
