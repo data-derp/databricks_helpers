@@ -40,7 +40,7 @@ class DataDerpDatabricksHelpers:
             os.remove(tmp_path)
 
         saved_filename = wget.download(url, out=tmp_path)
-        print(f"Downloaded: {saved_filename}")
+        print(f"Downloaded tmp file: {saved_filename}")
 
         if tmp_path.endswith(".zip"):
             print(f"Extracting: {tmp_path}")
@@ -48,5 +48,5 @@ class DataDerpDatabricksHelpers:
                 zip_ref.extractall(self.tmp_working_directory())
 
         self.dbutils.fs.cp(f"file:{self.tmp_working_directory()}/", self.working_directory(), True)
-
+        print(f"Successfully copied to {target_path}")
         return target_path
