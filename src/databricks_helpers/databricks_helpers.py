@@ -22,7 +22,7 @@ class DataDerpDatabricksHelpers:
         return f"{os.getcwd()}/{self.current_user()}/tmp"
 
     def clean_working_directory(self) -> bool:
-        print(f"Removing files in {self.working_directory()}")
+        print(f"Cleaning up/removing files in {self.working_directory()}")
         self.dbutils.fs.rm(self.working_directory(), True)
         return True
 
@@ -40,9 +40,10 @@ class DataDerpDatabricksHelpers:
             os.remove(tmp_path)
 
         saved_filename = wget.download(url, out=tmp_path)
-        print(saved_filename)
+        print(f"Downloaded: {saved_filename}")
 
-        if target_path.endswith(".zip"):
+        if tmp_path.endswith(".zip"):
+            print(f"Extracting: {tmp_path}")
             with zipfile.ZipFile(tmp_path, 'r') as zip_ref:
                 zip_ref.extractall(self.tmp_working_directory())
 
