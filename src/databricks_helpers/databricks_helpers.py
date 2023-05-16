@@ -49,3 +49,14 @@ class DataDerpDatabricksHelpers:
         self.dbutils.fs.cp(f"file:{self.tmp_working_directory()}/", self.working_directory(), True)
         print(f"Successfully copied to {target_path}")
         return target_path
+
+    def stop_all_streams(self, spark):
+        print("Stopping all streams")
+        for s in spark.streams.active:
+            try:
+                s.stop()
+            except:
+                pass
+        print("Stopped all streams")
+        return
+
