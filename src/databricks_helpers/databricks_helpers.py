@@ -25,6 +25,11 @@ class DataDerpDatabricksHelpers:
         print(f"Cleaning up/removing files in {self.working_directory()}")
         self.dbutils.fs.rm(self.working_directory(), True)
 
+    def clean_user_directory(self):
+        dir = f"/FileStore/{self.current_user()}"
+        print(f"Cleaning up/removing files in {dir}")
+        self.dbutils.fs.rm(dir, True)
+
     def clean_remake_dir(self):
         if os.path.isdir(self.tmp_working_directory()): shutil.rmtree(self.tmp_working_directory())
         os.makedirs(self.tmp_working_directory())
