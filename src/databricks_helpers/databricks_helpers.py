@@ -12,6 +12,9 @@ class DataDerpDatabricksHelpers:
         self.dbutils = dbutils
         self.exercise_name = exercise_name
 
+    def current_working_user(self) -> str:
+        return self.dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
+
     def current_user(self) -> str:
         return self.dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get().split("@")[0]
 
